@@ -1,4 +1,4 @@
-import { API_CONFIG } from '../config/api.js'
+import { API } from '../config/api.js'
 
 /**
  * Gère le processus de connexion de l'utilisateur
@@ -38,7 +38,7 @@ function getLoginCredentials() {
  * @param {Object} credentials - Les identifiants de l'utilisateur
  */
 async function authenticateUser({ phoneNumber, password }) {
-    const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}?phoneNumber=${phoneNumber}`)
+    const response = await fetch(`${API}?phoneNumber=${phoneNumber}`)
     const users = await response.json()
     
     return users.find(user => 

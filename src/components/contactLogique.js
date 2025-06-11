@@ -1,4 +1,4 @@
-import { API_CONFIG } from '../config/api.js'
+import { API } from '../config/api.js'
 
 export async function ajouterContact(event) {
     event.preventDefault();
@@ -14,7 +14,7 @@ export async function ajouterContact(event) {
 
     try {
         // Récupérer l'utilisateur actuel avec ses contacts
-        const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}/${utilisateurActuel.id}`);
+        const response = await fetch(`${API}/${utilisateurActuel.id}`);
         const user = await response.json();
         
         // Ajouter le nouveau contact à la liste
@@ -22,7 +22,7 @@ export async function ajouterContact(event) {
         user.contacts.push(nouveauContact);
 
         // Mettre à jour l'utilisateur avec le nouveau contact
-        const updateResponse = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}/${utilisateurActuel.id}`, {
+        const updateResponse = await fetch(`${API}/${utilisateurActuel.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -48,10 +48,20 @@ export function fermerFormulaireContact() {
 }
 
 export async function chargerContacts() {
+
+   const users = await fetch(`${API}`).then(response => response.json());
+    console.log("Les utilisateurs ", users); // This will log the JSON data containing the users
+
+    
     const utilisateurActuel = JSON.parse(localStorage.getItem('user'));
+    console.log('Chargement des contacts pour l\'utilisateur:', utilisateurActuel);
+    
     try {
-        const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}/${utilisateurActuel.id}`);
+        // const response = await fetch(`${API}/${utilisateurActuel.id}`);
+        const response = await fetch(`${API}/1`);
+        // console.log('Réponse du serveur:', response);
         const user = await response.json();
+        console.log('Utilisateur récupéré:', user);
         return user.contacts || [];
     } catch (error) {
         console.error('Erreur lors du chargement des contacts:', error);

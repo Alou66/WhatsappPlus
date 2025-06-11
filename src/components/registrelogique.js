@@ -1,5 +1,5 @@
 import { createLoginForm } from './login.js'
-import { API_CONFIG } from '../config/api.js'
+import { API } from '../config/api.js'
 
 export async function handleRegister(app) {
     const formData = {
@@ -10,7 +10,7 @@ export async function handleRegister(app) {
     }
     
     try {
-        const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}`, {
+        const response = await fetch(`${API}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

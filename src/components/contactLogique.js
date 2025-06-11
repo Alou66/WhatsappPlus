@@ -58,7 +58,7 @@ export async function chargerContacts() {
     
     try {
         // const response = await fetch(`${API}/${utilisateurActuel.id}`);
-        const response = await fetch(`${API}/1`);
+        const response = await fetch(`${API}/${utilisateurActuel.id}`);
         // console.log('Réponse du serveur:', response);
         const user = await response.json();
         console.log('Utilisateur récupéré:', user);

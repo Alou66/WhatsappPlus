@@ -1,0 +1,36 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phoneNumber": "123456789",
+      "password": "test123",
+      "contacts": [
+        {
+          "id": "1",
+          "prenom": "Jean",
+          "nom": "Dupont",
+          "numero": "0123456789",
+          "dateAjout": "2025-06-11T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "firstName": "Ousseynou",
+      "lastName": "Diallo",
+      "phoneNumber": "123",
+      "password": "A",
+      "contacts": [
+        {
+          "id": "c5a54c2f-a8ff-44e3-9d05-1826f9ea1963",
+          "prenom": "A",
+          "nom": "A",
+          "numero": "1",
+          "dateAjout": "2025-06-11T16:43:24.783Z"
+        }
+      ]
+    }
+  ]
+}

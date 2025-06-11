@@ -15,23 +15,3 @@ export function createSidebar() {
         </div>
     `;
 }
-
-// function generateChatList() {
-//     const chats = [
-//         { name: 'John Doe', message: 'Hello, how are you?', time: '10:30', img: 'https://via.placeholder.com/150' },
-//         { name: 'Jane Smith', message: 'Can we meet tomorrow?', time: '09:15', img: 'https://via.placeholder.com/150' },
-//     ];
-
-//     return chats.map(chat => `
-//         <div class="flex items-center gap-3 px-4 py-3 hover:bg-[#f0f2f5] cursor-pointer">
-//             <img src="${chat.img}" alt="${chat.name}" class="w-12 h-12 rounded-full">
-//             <div class="flex-1 border-b border-[#e9edef] pb-2">
-//                 <div class="flex justify-between items-center">
-//                     <h3 class="font-medium text-[#111b21]">${chat.name}</h3>
-//                     <span class="text-xs text-[#667781]">${chat.time}</span>
-//                 </div>
-//                 <p class="text-sm text-[#667781] truncate">${chat.message}</p>
-//             </div>
-//         </div>
-//     `).join('');
-// }

@@ -1,3 +1,5 @@
+import { API_CONFIG } from '../config/api.js'
+
 export async function ajouterContact(event) {
     event.preventDefault();
     const utilisateurActuel = JSON.parse(localStorage.getItem('user'));
@@ -12,7 +14,7 @@ export async function ajouterContact(event) {
 
     try {
         // Récupérer l'utilisateur actuel avec ses contacts
-        const response = await fetch(`http://localhost:3000/users/${utilisateurActuel.id}`);
+        const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}/${utilisateurActuel.id}`);
         const user = await response.json();
         
         // Ajouter le nouveau contact à la liste
@@ -20,7 +22,7 @@ export async function ajouterContact(event) {
         user.contacts.push(nouveauContact);
 
         // Mettre à jour l'utilisateur avec le nouveau contact
-        const updateResponse = await fetch(`http://localhost:3000/users/${utilisateurActuel.id}`, {
+        const updateResponse = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}/${utilisateurActuel.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -48,7 +50,7 @@ export function fermerFormulaireContact() {
 export async function chargerContacts() {
     const utilisateurActuel = JSON.parse(localStorage.getItem('user'));
     try {
-        const response = await fetch(`http://localhost:3000/users/${utilisateurActuel.id}`);
+        const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}/${utilisateurActuel.id}`);
         const user = await response.json();
         return user.contacts || [];
     } catch (error) {

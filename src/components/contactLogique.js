@@ -1,40 +1,41 @@
 import { API } from '../config/api.js'
 
-export async function ajouterContact(event) {
-    event.preventDefault();
-    const utilisateurActuel = JSON.parse(localStorage.getItem('user'));
-    
-    const nouveauContact = {
+// Crée un nouveau contact avec les données du formulaire
+function createContactObject() {
+    return {
         id: crypto.randomUUID(),
         prenom: document.getElementById('contactPrenom').value,
         nom: document.getElementById('contactNom').value,
         numero: document.getElementById('contactNumero').value,
         dateAjout: new Date().toISOString()
     };
+}
+
+// Met à jour l'affichage de la liste des contacts
+async function updateContactDisplay() {
+    const listeContacts = document.getElementById('listeContacts');
+    const contacts = await chargerContacts();
+    if (listeContacts) {
+        listeContacts.innerHTML = afficherContacts(contacts);
+    }
+}
+
+// Fonction principale d'ajout de contact
+export async function ajouterContact(event) {
+    event.preventDefault();
+    const utilisateurActuel = JSON.parse(localStorage.getItem('user'));
+    const nouveauContact = createContactObject();
 
     try {
-        // Récupérer l'utilisateur actuel avec ses contacts
-        const response = await fetch(`${API}/${utilisateurActuel.id}`);
-        const user = await response.json();
-        
-        // Ajouter le nouveau contact à la liste
+        const user = await fetchUserData(utilisateurActuel.id);
         if (!user.contacts) user.contacts = [];
         user.contacts.push(nouveauContact);
 
-        // Mettre à jour l'utilisateur avec le nouveau contact
-        const updateResponse = await fetch(`${API}/${utilisateurActuel.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        });
-
-        if (updateResponse.ok) {
-            // Mettre à jour le localStorage avec les nouvelles données
+        const success = await updateUserContacts(utilisateurActuel.id, user);
+        if (success) {
             localStorage.setItem('user', JSON.stringify(user));
+            await updateContactDisplay();
             fermerFormulaireContact();
-            await chargerContacts();
             alert('Contact ajouté avec succès!');
         }
     } catch (error) {
@@ -42,26 +43,34 @@ export async function ajouterContact(event) {
     }
 }
 
+// Récupère les données utilisateur
+async function fetchUserData(userId) {
+    const response = await fetch(`${API}/${userId}`);
+    return response.json();
+}
+
+// Met à jour les contacts de l'utilisateur sur le serveur
+async function updateUserContacts(userId, userData) {
+    const response = await fetch(`${API}/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    });
+    return response.ok;
+}
+
+// Le reste de votre code reste inchangé
 export function fermerFormulaireContact() {
     const modal = document.getElementById('contactFormModal');
     if (modal) modal.remove();
 }
 
 export async function chargerContacts() {
-
-   const users = await fetch(`${API}`).then(response => response.json());
-    console.log("Les utilisateurs ", users); // This will log the JSON data containing the users
-
-    
     const utilisateurActuel = JSON.parse(localStorage.getItem('user'));
-    console.log('Chargement des contacts pour l\'utilisateur:', utilisateurActuel);
     
     try {
-        // const response = await fetch(`${API}/${utilisateurActuel.id}`);
         const response = await fetch(`${API}/${utilisateurActuel.id}`);
-        // console.log('Réponse du serveur:', response);
         const user = await response.json();
-        console.log('Utilisateur récupéré:', user);
         return user.contacts || [];
     } catch (error) {
         console.error('Erreur lors du chargement des contacts:', error);
@@ -70,7 +79,7 @@ export async function chargerContacts() {
 }
 
 export function afficherContacts(contacts) {
-    const listeContacts = contacts.map(contact => `
+    return contacts.map(contact => `
         <div class="flex items-center gap-3 px-4 py-3 hover:bg-[#f0f2f5] cursor-pointer">
             <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
                 ${contact.prenom[0]}${contact.nom[0]}
@@ -83,6 +92,4 @@ export function afficherContacts(contacts) {
             </div>
         </div>
     `).join('');
-
-    return listeContacts;
 }

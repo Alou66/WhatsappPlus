@@ -80,14 +80,15 @@ export async function chargerContacts() {
 
 export function afficherContacts(contacts) {
     return contacts.map(contact => `
-        <div class="flex items-center gap-3 px-4 py-3 hover:bg-[#f0f2f5] cursor-pointer">
+        <div class="contact-item flex items-center gap-3 px-4 py-3 hover:bg-[#f0f2f5] cursor-pointer"
+             data-contact='${JSON.stringify(contact).replace(/'/g, "&apos;")}'>
             <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
                 ${contact.prenom[0]}${contact.nom[0]}
             </div>
             <div class="flex-1 border-b border-[#e9edef] pb-2">
                 <div class="flex justify-between items-center">
                     <h3 class="font-medium text-[#111b21]">${contact.prenom} ${contact.nom}</h3>
-                </div>
+               </div>
                 <p class="text-sm text-[#667781]">${contact.numero}</p>
             </div>
         </div>

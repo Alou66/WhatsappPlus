@@ -1,5 +1,6 @@
 import { createContactForm } from './contactForm.js';
 import { ajouterContact, fermerFormulaireContact, chargerContacts, afficherContacts } from './contactLogique.js';
+import { createChatArea } from './chatarea.js';
 
 export function createDiscussion() {
     return `
@@ -38,5 +39,26 @@ window.addEventListener('DOMContentLoaded', async () => {
     const listeContacts = document.getElementById('listeContacts');
     if (listeContacts) {
         listeContacts.innerHTML = afficherContacts(contacts);
+        listeContacts.querySelectorAll('.contact-item').forEach(item => {
+            item.addEventListener('click', event => {
+                const data = item.dataset.contact.replace(/&apos;/g, "'");
+                const contact = JSON.parse(data);
+                handleContactClick(contact, event);
+            });
+        });
     }
 });
+
+window.handleContactClick = function(contact, event) {
+    const allContacts = document.querySelectorAll('#listeContacts > div');
+    allContacts.forEach(el => el.classList.remove('bg-[#f0f2f5]'));
+
+    const clickedContact = event.currentTarget;
+    clickedContact.classList.add('bg-[#f0f2f5]');
+
+     const chatContainer = document.querySelector('.areaa');
+    if (chatContainer) {
+        chatContainer.outerHTML = createChatArea(contact);
+    }
+};
+

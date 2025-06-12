@@ -8,7 +8,6 @@ import { handleLogin } from './components/loginlogique.js'
 import { handleRegister } from './components/registrelogique.js'
 import { handleLogout } from './components/logoutlogique.js'
 
-
 const app = document.querySelector('#app')
 const isLoggedIn = localStorage.getItem('user')
 

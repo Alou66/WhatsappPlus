@@ -24,11 +24,12 @@ export async function createChatArea(contact = null) {
     const messages = await getMessages(contact.numero);
     const currentUser = JSON.parse(localStorage.getItem('user'));
 
+    // Modifier la première partie où les messages sont affichés initialement
     const messagesList = messages.map(msg => `
         <div class="flex ${msg.senderId === currentUser.id ? 'justify-end' : 'justify-start'} mb-4">
-            <div class="max-w-[60%] bg-${msg.senderId === currentUser.id ? '[#d9fdd3]' : 'white'} rounded-lg p-3 shadow">
-                <p class="text-[#111b21]">${msg.content}</p>
-                <p class="text-xs text-gray-500 text-right">
+            <div class="max-w-[60%] ${msg.senderId === currentUser.id ? 'bg-[#128C7E]' : 'bg-white'} rounded-lg p-3 shadow">
+                <p class="${msg.senderId === currentUser.id ? 'text-white' : 'text-[#111b21]'}">${msg.content}</p>
+                <p class="${msg.senderId === currentUser.id ? 'text-gray-200' : 'text-gray-500'} text-xs text-right">
                     ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                 </p>
             </div>
@@ -97,9 +98,9 @@ export async function createChatArea(contact = null) {
                     const newMessages = await getMessages(contact.numero);
                     messagesContainer.innerHTML = newMessages.map(msg => `
                         <div class="flex ${msg.senderId === currentUser.id ? 'justify-end' : 'justify-start'} mb-4">
-                            <div class="max-w-[60%] bg-${msg.senderId === currentUser.id ? '[#d9fdd3]' : 'white'} rounded-lg p-3 shadow">
-                                <p class="text-[#111b21]">${msg.content}</p>
-                                <p class="text-xs text-gray-500 text-right">
+                            <div class="max-w-[60%] ${msg.senderId === currentUser.id ? 'bg-[#128C7E]' : 'bg-white'} rounded-lg p-3 shadow">
+                                <p class="${msg.senderId === currentUser.id ? 'text-white' : 'text-[#111b21]'}">${msg.content}</p>
+                                <p class="${msg.senderId === currentUser.id ? 'text-gray-200' : 'text-gray-500'} text-xs text-right">
                                     ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                                 </p>
                             </div>

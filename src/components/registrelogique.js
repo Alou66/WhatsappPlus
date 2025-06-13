@@ -10,7 +10,17 @@ export async function handleRegister(app) {
     }
     
     try {
-        const response = await fetch(`${API}`, {
+        // Vérifier si le numéro existe déjà
+        const response = await fetch(`${API}?phoneNumber=${formData.phoneNumber}`)
+        const existingUsers = await response.json()
+        
+        if (existingUsers.length > 0) {
+            alert('Ce numéro de téléphone est déjà utilisé')
+            return
+        }
+        
+        // Si le numéro n'existe pas, procéder à l'inscription
+        const registerResponse = await fetch(`${API}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -18,7 +28,7 @@ export async function handleRegister(app) {
             body: JSON.stringify(formData)
         })
         
-        if (response.ok) {
+        if (registerResponse.ok) {
             app.innerHTML = createLoginForm()
             alert('Inscription réussie! Veuillez vous connecter.')
         }

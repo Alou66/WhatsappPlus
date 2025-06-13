@@ -37,6 +37,15 @@ export async function ajouterContact(event) {
     try {
         const user = await fetchUserData(utilisateurActuel.id);
         if (!user.contacts) user.contacts = [];
+
+        // Vérifier si le contact existe déjà
+        const contactExistant = user.contacts.find(contact => contact.numero === nouveauContact.numero);
+        if (contactExistant) {
+            alert('Ce numéro est déjà dans vos contacts');
+            return;
+        }
+
+        // Si le contact n'existe pas, l'ajouter
         user.contacts.push(nouveauContact);
 
         const success = await updateUserContacts(utilisateurActuel.id, user);

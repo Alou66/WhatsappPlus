@@ -40,25 +40,26 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (listeContacts) {
         listeContacts.innerHTML = afficherContacts(contacts);
         listeContacts.querySelectorAll('.contact-item').forEach(item => {
-            item.addEventListener('click', event => {
+            item.addEventListener('click', async (event) => {
                 const data = item.dataset.contact.replace(/&apos;/g, "'");
                 const contact = JSON.parse(data);
-                handleContactClick(contact, event);
+                await handleContactClick(contact, event);
             });
         });
     }
 });
 
-window.handleContactClick = function(contact, event) {
+window.handleContactClick = async function(contact, event) {
     const allContacts = document.querySelectorAll('#listeContacts > div');
     allContacts.forEach(el => el.classList.remove('bg-[#f0f2f5]'));
 
     const clickedContact = event.currentTarget;
     clickedContact.classList.add('bg-[#f0f2f5]');
 
-     const chatContainer = document.querySelector('.areaa');
+    const chatContainer = document.querySelector('.areaa');
     if (chatContainer) {
-        chatContainer.outerHTML = createChatArea(contact);
+        const chatAreaContent = await createChatArea(contact);
+        chatContainer.outerHTML = chatAreaContent;
     }
 };
 

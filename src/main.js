@@ -25,17 +25,19 @@ if (!isLoggedIn) {
     // Utiliser une fonction asynchrone auto-exécutée
     (async () => {
         const sidebar = await createSidebar();
+        const defaultChatArea = await createChatArea();
+        
         app.innerHTML = `
             <div class="flex h-screen w-full justify-center items-center">
                 <div class="flex h-[95%] w-[95%] shadow-[0px_0px_13px_-4px_#000000]">
                     ${sidebar}
                     ${createDiscussion()}
-                    ${createChatArea()}
+                    ${defaultChatArea}
                 </div>
             </div>
-        `
+        `;
         
-        document.querySelector('#logoutBtn').addEventListener('click', handleLogout)
+        document.querySelector('#logoutBtn').addEventListener('click', handleLogout);
     })();
 }
 

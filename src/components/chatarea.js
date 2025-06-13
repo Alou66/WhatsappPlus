@@ -1,4 +1,6 @@
-export function createChatArea(contact = null) {
+import { sendMessage, getMessages } from './messageLogique.js';
+
+export async function createChatArea(contact = null) {
     if (!contact) {
         return `
             <div class="w-[64%] areaa flex flex-col bg-[#f0f2f5] justify-center items-center gap-9">  
@@ -19,11 +21,25 @@ export function createChatArea(contact = null) {
         `;
     }
 
+    const messages = await getMessages(contact.numero);
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+
+    const messagesList = messages.map(msg => `
+        <div class="flex ${msg.senderId === currentUser.id ? 'justify-end' : 'justify-start'} mb-4">
+            <div class="max-w-[60%] bg-${msg.senderId === currentUser.id ? '[#d9fdd3]' : 'white'} rounded-lg p-3 shadow">
+                <p class="text-[#111b21]">${msg.content}</p>
+                <p class="text-xs text-gray-500 text-right">
+                    ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                </p>
+            </div>
+        </div>
+    `).join('');
+
     const chatAreaHTML = `
         <div class="w-[64%] areaa flex flex-col">
             <!-- En-tête du chat -->
             <div class="h-[60px] bg-[#f0f2f5] flex items-center justify-between px-4 border-l border-[#e9edef]">
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 cursor-pointer">
                     <div class="w-10 h-10 rounded-full bg-[#DFE5E7] flex items-center justify-center text-[#54656f]">
                         ${contact.prenom[0]}${contact.nom[0]}
                     </div>
@@ -39,9 +55,9 @@ export function createChatArea(contact = null) {
             </div>
 
             <!-- Zone des messages -->
-            <div class="flex-1 bg-[#efeae2] overflow-y-auto p-4" 
+            <div id="messagesContainer" class="flex-1 bg-[#efeae2] overflow-y-auto p-4" 
                  style="background-image: url('https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png');">
-                <!-- Les messages s'afficheront ici -->
+                ${messagesList}
             </div>
 
             <!-- Zone de saisie -->
@@ -50,29 +66,56 @@ export function createChatArea(contact = null) {
                     <i class="far fa-smile text-xl cursor-pointer hover:text-[#202020]"></i>
                     <i class="fas fa-paperclip text-xl cursor-pointer hover:text-[#202020]"></i>
                 </div>
-                <div class="flex-1 mx-2">
+                <form id="messageForm" class="flex-1 flex items-center gap-2">
                     <input 
                         type="text" 
                         id="messageInput" 
                         placeholder="Tapez un message" 
                         class="w-full py-2 px-4 rounded-lg border-none focus:outline-none bg-white"
-                        oninput="toggleSendIcon(this)"
                     >
-                </div>
-                <i id="sendIcon" class="fas fa-microphone text-xl text-[#54656f] cursor-pointer hover:text-[#202020]"></i>
+                    <button type="submit" class="fas fa-paper-plane text-xl text-[#54656f] cursor-pointer hover:text-[#202020]"></button>
+                </form>
             </div>
         </div>
     `;
 
-    // Ajouter la fonction toggleSendIcon au window pour qu'elle soit accessible globalement
-    window.toggleSendIcon = function(input) {
-        const sendIcon = document.getElementById('sendIcon');
-        if (input.value.trim() !== '') {
-            sendIcon.className = 'fa-solid fa-paper-plane text-xl text-[#54656f] cursor-pointer hover:text-[#202020]';
-        } else {
-            sendIcon.className = 'fas fa-microphone text-xl text-[#54656f] cursor-pointer hover:text-[#202020]';
-        }
-    };
+    // Après le rendu, ajouter les événements
+    setTimeout(() => {
+        const messageForm = document.getElementById('messageForm');
+        const messagesContainer = document.getElementById('messagesContainer');
+        
+        messageForm?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('messageInput');
+            const content = input.value.trim();
+            
+            if (content) {
+                try {
+                    await sendMessage(content, contact.numero);
+                    input.value = '';
+                    // Recharger les messages
+                    const newMessages = await getMessages(contact.numero);
+                    messagesContainer.innerHTML = newMessages.map(msg => `
+                        <div class="flex ${msg.senderId === currentUser.id ? 'justify-end' : 'justify-start'} mb-4">
+                            <div class="max-w-[60%] bg-${msg.senderId === currentUser.id ? '[#d9fdd3]' : 'white'} rounded-lg p-3 shadow">
+                                <p class="text-[#111b21]">${msg.content}</p>
+                                <p class="text-xs text-gray-500 text-right">
+                                    ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                                </p>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                } catch (error) {
+                    console.error('Erreur lors de l\'envoi du message:', error);
+                }
+            }
+        });
+        
+        // Scroll vers le bas au chargement
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }, 0);
 
     return chatAreaHTML;
 }

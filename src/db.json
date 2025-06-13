@@ -27,8 +27,65 @@
           "nom": "moalimou",
           "numero": "776549087",
           "dateAjout": "2025-06-13T00:28:38.210Z"
+        },
+        {
+          "id": "1ec1b1ab-986a-4f64-8e4e-0ef446685bb6",
+          "prenom": "ousseyou",
+          "nom": "Diallo",
+          "numero": "123",
+          "dateAjout": "2025-06-13T08:59:10.669Z"
         }
-      ]
+      ],
+      "messages": {
+        "123": [
+          {
+            "id": "e29deaa8-6f97-4620-b6d1-36a2715fa019",
+            "content": "salut",
+            "timestamp": "2025-06-13T08:59:21.303Z",
+            "senderId": "1",
+            "receiverId": "123"
+          }
+        ],
+        "776549087": [
+          {
+            "id": "792b6213-61bf-40ba-b30f-ee4abab72399",
+            "content": "salut",
+            "timestamp": "2025-06-13T08:48:56.926Z",
+            "senderId": "1",
+            "receiverId": "776549087"
+          },
+          {
+            "id": "683d5d8d-9cad-4036-9906-927eaf4cfeca",
+            "content": "boy",
+            "timestamp": "2025-06-13T08:49:05.847Z",
+            "senderId": "1",
+            "receiverId": "776549087"
+          },
+          {
+            "id": "ea2e5d5e-b3aa-4e29-82b7-229f0f29234d",
+            "content": "gdnyfjgy,husgdrftjtjt,t,dzjnkzd,kzmknbdjldk",
+            "timestamp": "2025-06-13T08:49:22.508Z",
+            "senderId": "1",
+            "receiverId": "776549087"
+          }
+        ],
+        "778021529": [
+          {
+            "id": "msg1",
+            "content": "Bonjour",
+            "timestamp": "2025-06-13T10:30:00.000Z",
+            "senderId": "1",
+            "receiverId": "778021529"
+          },
+          {
+            "id": "0e6a85bc-ed8e-4899-ae62-175059a4a0c4",
+            "content": "nfzei",
+            "timestamp": "2025-06-13T08:45:35.903Z",
+            "senderId": "1",
+            "receiverId": "778021529"
+          }
+        ]
+      }
     },
     {
       "id": "2",
@@ -51,7 +108,18 @@
           "numero": "778021529",
           "dateAjout": "2025-06-12T21:42:24.598Z"
         }
-      ]
+      ],
+      "messages": {
+        "778021529": [
+          {
+            "id": "22c1d068-dcc4-44e1-baf4-4fbddc833c48",
+            "content": "bonjour",
+            "timestamp": "2025-06-13T09:00:04.004Z",
+            "senderId": "2",
+            "receiverId": "778021529"
+          }
+        ]
+      }
     }
   ]
 }

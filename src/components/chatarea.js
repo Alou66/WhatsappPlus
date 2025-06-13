@@ -29,7 +29,7 @@ export function createChatArea(contact = null) {
                     </div>
                     <div>
                         <h3 class="font-medium text-[#111b21]">${contact.prenom} ${contact.nom}</h3>
-                        <p class="text-sm text-[#667781]">${contact.numero}</p>
+                        <p class="text-sm text-[#667781]">Cliquez ici pour obtenir les informations du contact</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-6 text-[#54656f]">

@@ -17,6 +17,14 @@ async function updateContactDisplay() {
     const contacts = await chargerContacts();
     if (listeContacts) {
         listeContacts.innerHTML = afficherContacts(contacts);
+        // Réattacher les événements de clic aux contacts
+        listeContacts.querySelectorAll('.contact-item').forEach(item => {
+            item.addEventListener('click', event => {
+                const data = item.dataset.contact.replace(/&apos;/g, "'");
+                const contact = JSON.parse(data);
+                handleContactClick(contact, event);
+            });
+        });
     }
 }
 

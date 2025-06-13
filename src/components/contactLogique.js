@@ -31,6 +31,17 @@ async function updateContactDisplay() {
 // Fonction principale d'ajout de contact
 export async function ajouterContact(event) {
     event.preventDefault();
+    
+    // Vérification des champs
+    const prenom = document.getElementById('contactPrenom').value.trim();
+    const nom = document.getElementById('contactNom').value.trim();
+    const numero = document.getElementById('contactNumero').value.trim();
+
+    if (!prenom || !nom || !numero) {
+        alert('Tous les champs sont obligatoires');
+        return;
+    }
+
     const utilisateurActuel = JSON.parse(localStorage.getItem('user'));
     const nouveauContact = createContactObject();
 

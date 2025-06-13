@@ -9,7 +9,7 @@ export function createDiscussion() {
                 <div class="text-[25px]">Discussions</div>
                 <div class="flex items-center gap-8">
                     <i id="ajouterContactBtn" class="fas fa-plus text-[20px] text-gray-800 cursor-pointer"></i>
-                    <i class="fas fa-ellipsis-vertical text-[20px] text-gray-800"></i>
+                    <i class="fas fa-ellipsis-vertical text-[20px] text-gray-800 cursor-pointer"></i>
                 </div>
             </div>
             <div class="px-3 py-3">

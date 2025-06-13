@@ -19,7 +19,7 @@ export function createChatArea(contact = null) {
         `;
     }
 
-    return `
+    const chatAreaHTML = `
         <div class="w-[64%] areaa flex flex-col">
             <!-- En-tête du chat -->
             <div class="h-[60px] bg-[#f0f2f5] flex items-center justify-between px-4 border-l border-[#e9edef]">
@@ -56,10 +56,23 @@ export function createChatArea(contact = null) {
                         id="messageInput" 
                         placeholder="Tapez un message" 
                         class="w-full py-2 px-4 rounded-lg border-none focus:outline-none bg-white"
+                        oninput="toggleSendIcon(this)"
                     >
                 </div>
-                <i class="fas fa-microphone text-xl text-[#54656f] cursor-pointer hover:text-[#202020]"></i>
+                <i id="sendIcon" class="fas fa-microphone text-xl text-[#54656f] cursor-pointer hover:text-[#202020]"></i>
             </div>
         </div>
     `;
+
+    // Ajouter la fonction toggleSendIcon au window pour qu'elle soit accessible globalement
+    window.toggleSendIcon = function(input) {
+        const sendIcon = document.getElementById('sendIcon');
+        if (input.value.trim() !== '') {
+            sendIcon.className = 'fa-solid fa-paper-plane text-xl text-[#54656f] cursor-pointer hover:text-[#202020]';
+        } else {
+            sendIcon.className = 'fas fa-microphone text-xl text-[#54656f] cursor-pointer hover:text-[#202020]';
+        }
+    };
+
+    return chatAreaHTML;
 }

@@ -19,10 +19,9 @@ export async function createSidebar() {
                 <i class="fas fa-comment-dots text-[25px] text-gray-700 cursor-pointer"></i>
                 <i class="fa-solid fa-users text-[25px] text-gray-700 cursor-pointer"></i>
             </div>
-            <div class="w-[100%] h-[200px] flex flex-col items-center gap-8">
+            <div class="w-[100%] p-3 flex flex-col items-center gap-8">
                 <i class="fa-solid fa-gear text-[25px] text-gray-700 cursor-pointer"></i>                
                 <div class="flex w-[50px] h-[50px] border text-[20px] rounded-full bg-gray-300 justify-center items-center cursor-pointer">${initiales}</div>
-                <i id="logoutBtn" class="fas fa-right-from-bracket text-[25px] text-red-500 cursor-pointer hover:text-red-800"></i>
             </div>
         </div>
     `;

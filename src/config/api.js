@@ -5,11 +5,11 @@
 //     }
 // }
 
-// export const API = 'https://backend-9dei.onrender.com/users';
+export const API = 'https://backend-9dei.onrender.com/users';
 
 
- const baseURL = location.hostname === "localhost"
-   ? "http://localhost:3001/users"
-   : "https://backend-9dei.onrender.com/users";
+//  const baseURL = location.hostname === "localhost"
+//    ? "http://localhost:3001/users"
+//    : "https://backend-9dei.onrender.com/users";
 
- export const API = baseURL;
+//  export const API = baseURL;

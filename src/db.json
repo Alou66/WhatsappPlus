@@ -84,6 +84,15 @@
             "senderId": "1",
             "receiverId": "778021529"
           }
+        ],
+        "0123456789": [
+          {
+            "id": "9015c8cd-ba9a-40dc-af81-d308b8434c28",
+            "content": "Salut",
+            "timestamp": "2025-06-14T15:17:17.054Z",
+            "senderId": "1",
+            "receiverId": "0123456789"
+          }
         ]
       }
     },
@@ -117,6 +126,33 @@
             "timestamp": "2025-06-13T09:00:04.004Z",
             "senderId": "2",
             "receiverId": "778021529"
+          }
+        ]
+      }
+    },
+    {
+      "id": "b6b8",
+      "firstName": "QWERTY",
+      "lastName": "Diallo",
+      "phoneNumber": "1234567",
+      "password": "A123",
+      "contacts": [
+        {
+          "id": "c0a6d9f9-cb3b-4c6f-8f54-e0ae5f879af2",
+          "prenom": "Alou",
+          "nom": "Diallo",
+          "numero": "12345678",
+          "dateAjout": "2025-06-15T11:46:49.874Z"
+        }
+      ],
+      "messages": {
+        "12345678": [
+          {
+            "id": "d0677846-aec3-43b4-b349-5ed5b071dcd3",
+            "content": "fils",
+            "timestamp": "2025-06-15T11:46:59.930Z",
+            "senderId": "b6b8",
+            "receiverId": "12345678"
           }
         ]
       }

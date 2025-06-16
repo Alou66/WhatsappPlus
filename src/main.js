@@ -6,6 +6,7 @@ import { createLoginForm } from './components/login.js'
 import { createRegisterForm } from './components/registre.js'
 import { handleLogin } from './components/loginlogique.js'
 import { handleRegister } from './components/registrelogique.js'
+import { afficherContacts, chargerContacts } from './components/contactLogique.js'
 
 const app = document.querySelector('#app')
 const isLoggedIn = localStorage.getItem('user')
@@ -37,6 +38,33 @@ if (!isLoggedIn) {
         `;
     })();
 }
+
+document.addEventListener('click', async (e) => {
+    // ... autres conditions
+
+    if (e.target.id === 'backToDiscussions') {
+        e.preventDefault();
+        const contacts = await chargerContacts();
+        const groupPanel = document.querySelector('.discussion-panel'); // le conteneur actuel du panneau groupe
+
+        if (groupPanel) {
+            groupPanel.outerHTML = createDiscussion();
+
+            const listeContacts = document.getElementById('listeContacts');
+            if (listeContacts) {
+                listeContacts.innerHTML = afficherContacts(contacts);
+                listeContacts.querySelectorAll('.contact-item').forEach(item => {
+                    item.addEventListener('click', async (event) => {
+                        const data = item.dataset.contact.replace(/&apos;/g, "'");
+                        const contact = JSON.parse(data);
+                        await handleContactClick(contact, event);
+                    });
+                });
+            }
+        }
+    }
+});
+
 
 document.addEventListener('submit', async (e) => {
     e.preventDefault()

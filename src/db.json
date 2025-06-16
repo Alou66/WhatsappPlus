@@ -1,6 +1,40 @@
 {
   "users": [
     {
+      "id": "1d3d",
+      "firstName": "Alassane",
+      "lastName": "Diallo",
+      "phoneNumber": "778021529",
+      "password": "A123",
+      "contacts": [
+        {
+          "id": "6d58bb9f-e9e7-4a89-8bb8-b5403d1b9b2f",
+          "prenom": "Alassane",
+          "nom": "Diallo",
+          "numero": "772004031",
+          "dateAjout": "2025-06-15T22:41:09.369Z"
+        },
+        {
+          "id": "3d3d07e7-207b-4842-89ac-a6ce6399c219",
+          "prenom": "Alou ",
+          "nom": "Diallo",
+          "numero": "1234234",
+          "dateAjout": "2025-06-15T23:17:57.216Z"
+        }
+      ],
+      "messages": {
+        "772004031": [
+          {
+            "id": "f404436e-0845-40f2-919d-8632733a2e6c",
+            "content": "Fils",
+            "timestamp": "2025-06-16T00:39:50.875Z",
+            "senderId": "1d3d",
+            "receiverId": "772004031"
+          }
+        ]
+      }
+    },
+    {
       "id": "1",
       "firstName": "John",
       "lastName": "Doe",
@@ -143,6 +177,13 @@
           "nom": "Diallo",
           "numero": "12345678",
           "dateAjout": "2025-06-15T11:46:49.874Z"
+        },
+        {
+          "id": "68f43ded-519d-49ea-9439-0577bd6c4f9a",
+          "prenom": "Alassane",
+          "nom": "Diallo",
+          "numero": "774322780",
+          "dateAjout": "2025-06-15T22:17:51.052Z"
         }
       ],
       "messages": {
@@ -151,6 +192,13 @@
             "id": "d0677846-aec3-43b4-b349-5ed5b071dcd3",
             "content": "fils",
             "timestamp": "2025-06-15T11:46:59.930Z",
+            "senderId": "b6b8",
+            "receiverId": "12345678"
+          },
+          {
+            "id": "af6dc535-5e43-4f54-b2db-8a23f8291a48",
+            "content": "kbdcsjjkdskuhbdsfkbjdfskjbdfsk",
+            "timestamp": "2025-06-15T22:15:21.584Z",
             "senderId": "b6b8",
             "receiverId": "12345678"
           }

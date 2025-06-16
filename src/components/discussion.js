@@ -2,10 +2,11 @@ import { createContactForm } from './contactForm.js';
 import { ajouterContact, fermerFormulaireContact, chargerContacts, afficherContacts } from './contactLogique.js';
 import { createChatArea } from './chatarea.js';
 import { handleLogout } from './logoutlogique.js';
+import { createGroupView } from './groupView.js';
 
 export function createDiscussion() {
     return `
-        <div class="w-[30%] flex flex-col border-r border-[#959797]">
+        <div class="discussion-panel w-[30%] flex flex-col border-r border-[#959797]">
             <div class="h-[60px] flex items-center justify-between p-5 relative">
                 <div class="text-[25px]">Discussions</div>
                 <div class="flex items-center gap-8">
@@ -14,7 +15,7 @@ export function createDiscussion() {
                         <i id="menuBtn" class="fas fa-ellipsis-vertical text-[20px] text-gray-800 cursor-pointer"></i>
                         <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50">
                             <div class="py-1">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="#" id="newGroupLink" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     Nouveau groupe
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -33,8 +34,13 @@ export function createDiscussion() {
                 </div>
             </div>
             <div class="px-3 py-3">
-                <i class="fas fa-search absolute bottom-[700px] left-[150px]"></i>
-                <input type="text" id="search" placeholder="Rechercher" class="w-full px-12 h-10 border border-gray-300 rounded-[7px] bg-[#f0ecec]"/>
+                <div class="relative">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    <input type="text" 
+                           id="searchGroupContacts" 
+                           placeholder="Rechercher des contacts" 
+                           class="w-full pl-10 pr-4 h-10 border border-gray-300 rounded-[7px] bg-[#f0ecec]"/>
+                </div>
             </div>
             <div id="listeContacts" class="flex-1 overflow-y-auto">
                 <!-- La liste des contacts sera insérée ici -->
@@ -51,6 +57,7 @@ document.addEventListener('click', async (e) => {
         document.getElementById('addContactForm').addEventListener('submit', ajouterContact);
         document.getElementById('annulerContact').addEventListener('click', fermerFormulaireContact);
     }
+
 
     // Nouveau gestionnaire pour le menu
     if (e.target.id === 'menuBtn') {
@@ -71,6 +78,17 @@ document.addEventListener('click', async (e) => {
         e.preventDefault();
         handleLogout();
     }
+
+    if (e.target.closest('#newGroupLink')) {
+        e.preventDefault();
+        const contacts = await chargerContacts();
+        const discussionContainer = document.querySelector('.discussion-panel'); // ✅ Déclaration ici
+        if (discussionContainer) {
+            discussionContainer.outerHTML = createGroupView(contacts);
+            attachGroupContactEvents(); // Réattache les événements de sélection
+        }
+    }
+
 });
 
 // Chargement initial des contacts
@@ -103,3 +121,34 @@ window.handleContactClick = async function(contact, event) {
     }
 };
 
+
+
+function attachGroupContactEvents() {
+    const contactItems = document.querySelectorAll('.contact-select-item');
+    const createGroupBtn = document.getElementById('createGroupButton');
+    const selectedContacts = new Set();
+
+    contactItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const numero = item.querySelector('p').textContent;
+            const checkbox = item.querySelector('.contact-checkbox');
+
+            if (selectedContacts.has(numero)) {
+                selectedContacts.delete(numero);
+                checkbox.classList.remove('bg-green-500');
+            } else {
+                selectedContacts.add(numero);
+                checkbox.classList.add('bg-green-500');
+            }
+
+            // Activer / désactiver le bouton
+            if (selectedContacts.size > 0) {
+                createGroupBtn.disabled = false;
+                createGroupBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                createGroupBtn.disabled = true;
+                createGroupBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        });
+    });
+}

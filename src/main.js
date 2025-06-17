@@ -7,6 +7,7 @@ import { createRegisterForm } from './components/registre.js'
 import { handleLogin } from './components/loginlogique.js'
 import { handleRegister } from './components/registrelogique.js'
 import { afficherContacts, chargerContacts } from './components/contactLogique.js'
+import { createGroupForm } from './components/groupForm.js'
 
 const app = document.querySelector('#app')
 const isLoggedIn = localStorage.getItem('user')
@@ -60,6 +61,49 @@ document.addEventListener('click', async (e) => {
                         await handleContactClick(contact, event);
                     });
                 });
+            }
+        }
+    }
+
+    if (e.target.closest('#createGroupButton') && !e.target.closest('#createGroupButton').disabled) {
+        const discussionPanel = document.querySelector('.discussion-panel');
+        if (discussionPanel) {
+            discussionPanel.outerHTML = createGroupForm(); // Remplacer directement le panel
+        }
+    }
+
+    // Ajouter un gestionnaire pour le retour
+    if (e.target.id === 'backToGroupView') {
+        const discussionPanel = document.querySelector('.discussion-panel');
+        if (discussionPanel) {
+            const contacts = await chargerContacts();
+            discussionPanel.outerHTML = createGroupView(contacts);
+            // Réattacher les événements
+            attachGroupContactEvents();
+        }
+    }
+
+    // Ajouter un gestionnaire pour la création du groupe
+    if (e.target.id === 'createGroupSubmit') {
+        const groupName = document.getElementById('groupName').value;
+        const groupDescription = document.getElementById('groupDescription').value;
+        
+        if (!groupName || !groupDescription) {
+            alert('Veuillez remplir tous les champs');
+            return;
+        }
+        
+        // Ici vous pourrez ajouter la logique pour créer le groupe
+        console.log('Groupe créé:', { groupName, groupDescription });
+        
+        // Retour à la vue des discussions
+        const discussionPanel = document.querySelector('.discussion-panel');
+        if (discussionPanel) {
+            discussionPanel.outerHTML = createDiscussion();
+            const contacts = await chargerContacts();
+            const listeContacts = document.getElementById('listeContacts');
+            if (listeContacts) {
+                listeContacts.innerHTML = afficherContacts(contacts);
             }
         }
     }

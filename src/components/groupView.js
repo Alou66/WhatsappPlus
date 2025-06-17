@@ -1,12 +1,12 @@
-import { afficherContacts, chargerContacts } from "./contactLogique";
-import { createDiscussion } from "./discussion";
+// import { afficherContacts, chargerContacts } from "./contactLogique";
+// import { createDiscussion } from "./discussion";
 
 export function createGroupView(contacts) {
     return `
         <div class="discussion-panel w-[30%] flex flex-col border-r border-[#959797]">
             <div class="h-[60px] flex items-center gap-4 p-5 border-b">
                 <i id="backToDiscussions" class="fas fa-close text-[20px] text-gray-800 cursor-pointer"></i>
-                <div class="text-[20px]">Nouveau groupe</div>
+                <div class="text-[20px]">Ajouter des membres au groupe</div>
             </div>
             <div class="px-3 py-3">
                 <div class="relative">
@@ -31,11 +31,11 @@ export function createGroupView(contacts) {
                     </div>
                 `).join('')}
             </div>
-            <div class="p-4 border-t">
+            <div class="p-4 flex items-center justify-center">
                 <button id="createGroupButton" 
-                        class="w-full bg-green-500 text-white py-2 px-4 rounded-lg opacity-50 cursor-not-allowed"
+                        class="w-[50px] h-[50px] bg-green-500 text-white rounded-full opacity-50 cursor-not-allowed flex items-center justify-center"
                         disabled>
-                    Suivant
+                    <i class="fas fa-arrow-right text-[20px]"></i> 
                 </button>
             </div>
         </div>

@@ -8,6 +8,7 @@ import { handleLogin } from './components/loginlogique.js'
 import { handleRegister } from './components/registrelogique.js'
 import { afficherContacts, chargerContacts } from './components/contactLogique.js'
 import { createGroupForm } from './components/groupForm.js'
+import { createGroupView } from './components/groupView.js';
 
 const app = document.querySelector('#app')
 const isLoggedIn = localStorage.getItem('user')
@@ -74,12 +75,11 @@ document.addEventListener('click', async (e) => {
 
     // Ajouter un gestionnaire pour le retour
     if (e.target.id === 'backToGroupView') {
+        const contacts = await chargerContacts();
         const discussionPanel = document.querySelector('.discussion-panel');
         if (discussionPanel) {
-            const contacts = await chargerContacts();
             discussionPanel.outerHTML = createGroupView(contacts);
-            // Réattacher les événements
-            attachGroupContactEvents();
+            attachGroupContactEvents(); // Les sélections seront restaurées
         }
     }
 
@@ -119,5 +119,64 @@ document.addEventListener('submit', async (e) => {
         await handleLogin(app)
     }
 })
+
+// Ajouter cette variable au niveau global pour stocker les contacts sélectionnés
+const selectedGroupContacts = new Set();
+
+// Modifier la fonction attachGroupContactEvents
+function attachGroupContactEvents() {
+    const contactItems = document.querySelectorAll('.contact-select-item');
+    const createGroupBtn = document.getElementById('createGroupButton');
+
+    contactItems.forEach(item => {
+        const numero = item.querySelector('p').textContent;
+        const checkbox = item.querySelector('.contact-checkbox');
+        
+        // Restaurer l'état de sélection
+        if (selectedGroupContacts.has(numero)) {
+            checkbox.classList.add('bg-green-500');
+        }
+
+        item.addEventListener('click', () => {
+            if (selectedGroupContacts.has(numero)) {
+                selectedGroupContacts.delete(numero);
+                checkbox.classList.remove('bg-green-500');
+            } else {
+                selectedGroupContacts.add(numero);
+                checkbox.classList.add('bg-green-500');
+            }
+
+            // Activer / désactiver le bouton
+            if (selectedGroupContacts.size > 0) {
+                createGroupBtn.disabled = false;
+                createGroupBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                createGroupBtn.disabled = true;
+                createGroupBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        });
+    });
+
+    // Activer le bouton si des contacts sont déjà sélectionnés
+    if (selectedGroupContacts.size > 0) {
+        createGroupBtn.disabled = false;
+        createGroupBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+}
+
+// Modifier le gestionnaire de clic pour backToGroupView
+document.addEventListener('click', async (e) => {
+    // ...existing code...
+
+    if (e.target.id === 'backToGroupView') {
+        const contacts = await chargerContacts();
+        const discussionPanel = document.querySelector('.discussion-panel');
+        if (discussionPanel) {
+            discussionPanel.outerHTML = createGroupView(contacts);
+            attachGroupContactEvents(); // Les sélections seront restaurées
+        }
+    }
+
+});
 
 

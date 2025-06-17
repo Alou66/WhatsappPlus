@@ -1,4 +1,5 @@
 import { API } from '../config/api.js'
+import { createChatArea, createGroupChatArea } from './chatarea.js';
 
 // Crée un nouveau contact avec les données du formulaire
 function createContactObject() {
@@ -17,17 +18,59 @@ function createContactObject() {
 // Met à jour l'affichage de la liste des contacts
 async function updateContactDisplay() {
     const listeContacts = document.getElementById('listeContacts');
-    const contacts = await chargerContacts();
+    const { contacts, groups } = await chargerContacts();
     if (listeContacts) {
-        listeContacts.innerHTML = afficherContacts(contacts);
-        // Réattacher les événements de clic aux contacts
-        listeContacts.querySelectorAll('.contact-item').forEach(item => {
-            item.addEventListener('click', event => {
-                const data = item.dataset.contact.replace(/&apos;/g, "'");
-                const contact = JSON.parse(data);
-                handleContactClick(contact, event);
-            });
+        listeContacts.innerHTML = afficherContacts({ contacts, groups });
+        attachEvents();
+    }
+}
+
+// Nouvelle fonction pour attacher tous les événements
+export function attachEvents() {
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.addEventListener('click', async (event) => {
+            try {
+                if (item.dataset.contact) {
+                    const contact = JSON.parse(item.dataset.contact.replace(/&apos;/g, "'"));
+                    await handleContactClick(contact, event);
+                } else if (item.dataset.group) {
+                    const group = JSON.parse(item.dataset.group.replace(/&apos;/g, "'"));
+                    await handleGroupClick(group, event);
+                }
+            } catch (error) {
+                console.error('Erreur lors du traitement du clic:', error);
+            }
         });
+    });
+}
+
+// Définir handleContactClick dans ce fichier
+async function handleContactClick(contact, event) {
+    const allItems = document.querySelectorAll('#listeContacts > div');
+    allItems.forEach(el => el.classList.remove('bg-[#f0f2f5]'));
+
+    const clickedItem = event.currentTarget;
+    clickedItem.classList.add('bg-[#f0f2f5]');
+
+    const chatContainer = document.querySelector('.areaa');
+    if (chatContainer) {
+        const chatAreaContent = await createChatArea(contact);
+        chatContainer.outerHTML = chatAreaContent;
+    }
+}
+
+// Ajouter handleGroupClick
+async function handleGroupClick(group, event) {
+    const allItems = document.querySelectorAll('#listeContacts > div');
+    allItems.forEach(el => el.classList.remove('bg-[#f0f2f5]'));
+
+    const clickedItem = event.currentTarget;
+    clickedItem.classList.add('bg-[#f0f2f5]');
+
+    const chatContainer = document.querySelector('.areaa');
+    if (chatContainer) {
+        const chatAreaContent = await createGroupChatArea(group);
+        chatContainer.outerHTML = chatAreaContent;
     }
 }
 
@@ -100,7 +143,10 @@ async function updateUserContacts(userId, userData) {
 // Le reste de votre code reste inchangé
 export function fermerFormulaireContact() {
     const modal = document.getElementById('contactFormModal');
-    if (modal) modal.remove();
+    if (modal) {
+        modal.remove();
+        updateContactDisplay(); // Mettre à jour l'affichage et réattacher les événements
+    }
 }
 
 export async function chargerContacts() {

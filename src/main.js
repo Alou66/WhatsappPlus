@@ -6,7 +6,7 @@ import { createLoginForm } from './components/login.js'
 import { createRegisterForm } from './components/registre.js'
 import { handleLogin } from './components/loginlogique.js'
 import { handleRegister } from './components/registrelogique.js'
-import { afficherContacts, chargerContacts } from './components/contactLogique.js'
+import { chargerContacts, afficherContacts, attachEvents } from './components/contactLogique.js'
 import { createGroupForm } from './components/groupForm.js'
 import { createGroupView } from './components/groupView.js';
 import { createGroup } from './components/groupLogique.js';
@@ -238,5 +238,15 @@ async function handleGroupClick(group, event) {
         chatContainer.outerHTML = await createGroupChatArea(group);
     }
 }
+
+// Au chargement initial des contacts
+window.addEventListener('DOMContentLoaded', async () => {
+    const { contacts, groups } = await chargerContacts();
+    const listeContacts = document.getElementById('listeContacts');
+    if (listeContacts) {
+        listeContacts.innerHTML = afficherContacts({ contacts, groups });
+        attachEvents(); // Maintenant la fonction est disponible
+    }
+});
 
 

@@ -91,13 +91,46 @@ document.addEventListener('click', async (e) => {
 
 });
 
-// Chargement initial des contacts
+// Supprimer les multiples event listeners DOMContentLoaded et les combiner en un seul
 window.addEventListener('DOMContentLoaded', async () => {
+    // Chargement initial des contacts
     const { contacts, groups } = await chargerContacts();
     const listeContacts = document.getElementById('listeContacts');
     if (listeContacts) {
         listeContacts.innerHTML = afficherContacts({ contacts, groups });
-        attachContactClickEvents(); // Utilisez la nouvelle fonction
+        attachContactClickEvents();
+    }
+
+    // Configuration de la recherche
+    const searchInput = document.getElementById('searchGroupContacts');
+    if (searchInput) {
+        const debouncedSearch = debounce(async (searchTerm) => {
+            const { contacts, groups } = await chargerContacts();
+            
+            const filteredContacts = contacts ? contacts.filter(contact => 
+                contact.prenom?.toLowerCase().includes(searchTerm) ||
+                contact.nom?.toLowerCase().includes(searchTerm) ||
+                contact.numero?.includes(searchTerm)
+            ) : [];
+            
+            const filteredGroups = groups ? groups.filter(group =>
+                group.name?.toLowerCase().includes(searchTerm)
+            ) : [];
+            
+            const listeContacts = document.getElementById('listeContacts');
+            if (listeContacts) {
+                listeContacts.innerHTML = afficherContacts({
+                    contacts: filteredContacts,
+                    groups: filteredGroups
+                });
+                attachContactClickEvents();
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            debouncedSearch(searchTerm);
+        });
     }
 });
 
@@ -177,4 +210,15 @@ function attachGroupContactEvents() {
             }
         });
     });
+}
+
+// Ajouter cette fonction de debounce en haut du fichier
+function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, args);
+        }, timeout);
+    };
 }

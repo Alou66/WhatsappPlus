@@ -1,6 +1,6 @@
 import { createContactForm } from './contactForm.js';
 import { ajouterContact, fermerFormulaireContact, chargerContacts, afficherContacts } from './contactLogique.js';
-import { createChatArea } from './chatarea.js';
+import { createChatArea, createGroupChatArea } from './chatarea.js';
 import { handleLogout } from './logoutlogique.js';
 import { createGroupView } from './groupView.js';
 
@@ -93,35 +93,61 @@ document.addEventListener('click', async (e) => {
 
 // Chargement initial des contacts
 window.addEventListener('DOMContentLoaded', async () => {
-    const contacts = await chargerContacts();
+    const { contacts, groups } = await chargerContacts();
     const listeContacts = document.getElementById('listeContacts');
     if (listeContacts) {
-        listeContacts.innerHTML = afficherContacts(contacts);
-        listeContacts.querySelectorAll('.contact-item').forEach(item => {
-            item.addEventListener('click', async (event) => {
-                const data = item.dataset.contact.replace(/&apos;/g, "'");
-                const contact = JSON.parse(data);
-                await handleContactClick(contact, event);
-            });
-        });
+        listeContacts.innerHTML = afficherContacts({ contacts, groups });
+        attachContactClickEvents(); // Utilisez la nouvelle fonction
     }
 });
 
-window.handleContactClick = async function(contact, event) {
-    const allContacts = document.querySelectorAll('#listeContacts > div');
-    allContacts.forEach(el => el.classList.remove('bg-[#f0f2f5]'));
+// Dans main.js, modifiez la fonction attachContactClickEvents
+function attachContactClickEvents() {
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.addEventListener('click', async (event) => {
+            try {
+                if (item.dataset.contact) {
+                    const contact = JSON.parse(item.dataset.contact.replace(/&apos;/g, "'"));
+                    await handleContactClick(contact, event);
+                } else if (item.dataset.group) {
+                    const group = JSON.parse(item.dataset.group.replace(/&apos;/g, "'"));
+                    await handleGroupClick(group, event);
+                }
+            } catch (error) {
+                console.error('Erreur lors du traitement du clic:', error);
+            }
+        });
+    });
+}
 
-    const clickedContact = event.currentTarget;
-    clickedContact.classList.add('bg-[#f0f2f5]');
+// Assurez-vous que handleGroupClick est bien défini
+async function handleGroupClick(group, event) {
+    const allItems = document.querySelectorAll('#listeContacts > div');
+    allItems.forEach(el => el.classList.remove('bg-[#f0f2f5]'));
+
+    const clickedItem = event.currentTarget;
+    clickedItem.classList.add('bg-[#f0f2f5]');
+
+    const chatContainer = document.querySelector('.areaa');
+    if (chatContainer) {
+        chatContainer.outerHTML = await createGroupChatArea(group);
+    }
+}
+
+// Assurez-vous que handleContactClick est défini comme une fonction normale (pas une méthode window)
+async function handleContactClick(contact, event) {
+    const allItems = document.querySelectorAll('#listeContacts > div');
+    allItems.forEach(el => el.classList.remove('bg-[#f0f2f5]'));
+
+    const clickedItem = event.currentTarget;
+    clickedItem.classList.add('bg-[#f0f2f5]');
 
     const chatContainer = document.querySelector('.areaa');
     if (chatContainer) {
         const chatAreaContent = await createChatArea(contact);
         chatContainer.outerHTML = chatAreaContent;
     }
-};
-
-
+}
 
 function attachGroupContactEvents() {
     const contactItems = document.querySelectorAll('.contact-select-item');

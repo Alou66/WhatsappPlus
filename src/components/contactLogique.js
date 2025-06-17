@@ -7,9 +7,12 @@ function createContactObject() {
         prenom: document.getElementById('contactPrenom').value,
         nom: document.getElementById('contactNom').value,
         numero: document.getElementById('contactNumero').value,
+        
         dateAjout: new Date().toISOString()
     };
 }
+
+  
 
 // Met à jour l'affichage de la liste des contacts
 async function updateContactDisplay() {
@@ -40,7 +43,14 @@ export async function ajouterContact(event) {
     if (!prenom || !nom || !numero) {
         alert('Tous les champs sont obligatoires');
         return;
+    };
+    if ( !/^\d+$/.test(numero)) {
+        alert('veillez entrer un numero valide');
+        return;
     }
+
+   
+
 
     const utilisateurActuel = JSON.parse(localStorage.getItem('user'));
     const nouveauContact = createContactObject();
@@ -118,7 +128,7 @@ export function afficherContacts({ contacts, groups }) {
             <div class="contact-item flex items-center gap-3 px-4 py-3 hover:bg-[#f0f2f5] cursor-pointer"
                  data-group='${JSON.stringify(group).replace(/'/g, "&apos;")}'>
                 <div class="w-12 h-12 rounded-full bg-[#00a884] flex items-center justify-center text-white">
-                    ${group.name[0]}
+                    ${group.name[0].toUpperCase()}
                 </div>
                 <div class="flex-1 border-b border-[#e9edef] pb-2">
                     <div class="flex justify-between items-center">
@@ -150,3 +160,4 @@ export function afficherContacts({ contacts, groups }) {
     
     return html;
 }
+

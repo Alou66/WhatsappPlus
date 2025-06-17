@@ -219,11 +219,24 @@ function attachContactClickEvents() {
             } else if (item.dataset.group) {
                 const data = item.dataset.group.replace(/&apos;/g, "'");
                 const group = JSON.parse(data);
-                // Gérer le clic sur un groupe (à implémenter)
-                // await handleGroupClick(group, event);
+                await handleGroupClick(group, event);
             }
         });
     });
+}
+
+// Ajouter cette nouvelle fonction
+async function handleGroupClick(group, event) {
+    const allItems = document.querySelectorAll('#listeContacts > div');
+    allItems.forEach(el => el.classList.remove('bg-[#f0f2f5]'));
+
+    const clickedItem = event.currentTarget;
+    clickedItem.classList.add('bg-[#f0f2f5]');
+
+    const chatContainer = document.querySelector('.areaa');
+    if (chatContainer) {
+        chatContainer.outerHTML = await createGroupChatArea(group);
+    }
 }
 
 

@@ -120,3 +120,45 @@ export async function createChatArea(contact = null) {
 
     return chatAreaHTML;
 }
+
+// Ajouter cette nouvelle fonction
+export async function createGroupChatArea(group) {
+    return `
+        <div class="w-[64%] areaa flex flex-col">
+            <div class="h-[60px] bg-[#f0f2f5] flex items-center justify-between px-4 border-l border-[#e9edef]">
+                <div class="flex items-center gap-3 cursor-pointer">
+                    <div class="w-10 h-10 rounded-full bg-[#00a884] flex items-center justify-center text-white">
+                        ${group.name[0]}
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-[#111b21]">${group.name}</h3>
+                        <p class="text-sm text-[#667781]">${group.members.length} membres</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6 text-[#54656f]">
+                    <i class="fas fa-search text-xl"></i>
+                    <i class="fas fa-ellipsis-vertical text-xl"></i>
+                </div>
+            </div>
+
+            <div id="groupMessagesContainer" class="flex-1 bg-[#efeae2] overflow-y-auto p-4"
+                 style="background-image: url('https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png');">
+                <!-- Les messages du groupe seront affichés ici -->
+            </div>
+
+            <div class="h-[62px] bg-[#f0f2f5] flex items-center gap-2 px-4">
+                <div class="flex items-center gap-4 text-[#54656f]">
+                    <i class="far fa-smile text-xl cursor-pointer hover:text-[#202020]"></i>
+                    <i class="fas fa-paperclip text-xl cursor-pointer hover:text-[#202020]"></i>
+                </div>
+                <form id="groupMessageForm" class="flex-1 flex items-center gap-2">
+                    <input type="text" 
+                           id="groupMessageInput" 
+                           placeholder="Tapez un message" 
+                           class="w-full py-2 px-4 rounded-lg border-none focus:outline-none bg-white">
+                    <button type="submit" class="fas fa-paper-plane text-xl text-[#54656f] cursor-pointer hover:text-[#202020]"></button>
+                </form>
+            </div>
+        </div>
+    `;
+}

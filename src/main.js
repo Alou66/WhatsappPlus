@@ -46,23 +46,14 @@ document.addEventListener('click', async (e) => {
     // ... autres conditions
 
     if (e.target.id === 'backToDiscussions') {
-        e.preventDefault();
-        const contacts = await chargerContacts();
-        const groupPanel = document.querySelector('.discussion-panel'); // le conteneur actuel du panneau groupe
-
-        if (groupPanel) {
-            groupPanel.outerHTML = createDiscussion();
-
+        const { contacts, groups } = await chargerContacts();
+        const discussionPanel = document.querySelector('.discussion-panel');
+        if (discussionPanel) {
+            discussionPanel.outerHTML = createDiscussion();
             const listeContacts = document.getElementById('listeContacts');
             if (listeContacts) {
-                listeContacts.innerHTML = afficherContacts(contacts);
-                listeContacts.querySelectorAll('.contact-item').forEach(item => {
-                    item.addEventListener('click', async (event) => {
-                        const data = item.dataset.contact.replace(/&apos;/g, "'");
-                        const contact = JSON.parse(data);
-                        await handleContactClick(contact, event);
-                    });
-                });
+                listeContacts.innerHTML = afficherContacts({ contacts, groups });
+                attachContactClickEvents();
             }
         }
     }

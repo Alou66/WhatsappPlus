@@ -9,6 +9,7 @@ import { handleRegister } from './components/registrelogique.js'
 import { afficherContacts, chargerContacts } from './components/contactLogique.js'
 import { createGroupForm } from './components/groupForm.js'
 import { createGroupView } from './components/groupView.js';
+import { createGroup } from './components/groupLogique.js';
 
 const app = document.querySelector('#app')
 const isLoggedIn = localStorage.getItem('user')
@@ -75,36 +76,64 @@ document.addEventListener('click', async (e) => {
 
     // Ajouter un gestionnaire pour le retour
     if (e.target.id === 'backToGroupView') {
-        const contacts = await chargerContacts();
+        const { contacts } = await chargerContacts(); // Destructurer pour obtenir juste contacts
         const discussionPanel = document.querySelector('.discussion-panel');
         if (discussionPanel) {
-            discussionPanel.outerHTML = createGroupView(contacts);
-            attachGroupContactEvents(); // Les sélections seront restaurées
+            discussionPanel.outerHTML = createGroupView({ contacts }); // Passer un objet avec contacts
+            attachGroupContactEvents();
         }
     }
 
     // Ajouter un gestionnaire pour la création du groupe
-    if (e.target.id === 'createGroupSubmit') {
-        const groupName = document.getElementById('groupName').value;
-        const groupDescription = document.getElementById('groupDescription').value;
+    if (e.target.closest('#createGroupSubmit')) {
+        const groupName = document.getElementById('groupName').value.trim();
+        const groupDescription = document.getElementById('groupDescription').value.trim();
         
-        if (!groupName || !groupDescription) {
-            alert('Veuillez remplir tous les champs');
+        if (!groupName) {
+            alert('Le nom du groupe est obligatoire');
             return;
         }
         
-        // Ici vous pourrez ajouter la logique pour créer le groupe
-        console.log('Groupe créé:', { groupName, groupDescription });
-        
-        // Retour à la vue des discussions
+        try {
+            const newGroup = await createGroup(groupName, groupDescription, Array.from(selectedGroupContacts));
+                selectedGroupContacts.clear();
+            
+            const discussionPanel = document.querySelector('.discussion-panel');
+            if (discussionPanel) {
+                discussionPanel.outerHTML = createDiscussion();
+                const { contacts, groups } = await chargerContacts();
+                const listeContacts = document.getElementById('listeContacts');
+                if (listeContacts) {
+                    listeContacts.innerHTML = afficherContacts({ contacts, groups });
+                    // Réattacher les événements de clic
+                    attachContactClickEvents();
+                }
+            }
+            
+            alert('Groupe créé avec succès !');
+        } catch (error) {
+            alert('Erreur lors de la création du groupe: ' + error.message);
+        }
+    }
+
+    // Dans le gestionnaire de clic pour #newGroupLink
+    if (e.target.closest('#newGroupLink')) {
+        e.preventDefault();
+        const { contacts } = await chargerContacts(); // Destructurer pour obtenir juste contacts
+        const discussionContainer = document.querySelector('.discussion-panel');
+        if (discussionContainer) {
+            discussionContainer.outerHTML = createGroupView({ contacts }); // Passer un objet avec contacts
+            attachGroupContactEvents();
+        }
+    }
+
+    // De même pour le gestionnaire de backToGroupView
+    if (e.target.id === 'backToGroupView') {
+        const { contacts } = await chargerContacts(); // Destructurer pour obtenir juste contacts
         const discussionPanel = document.querySelector('.discussion-panel');
         if (discussionPanel) {
-            discussionPanel.outerHTML = createDiscussion();
-            const contacts = await chargerContacts();
-            const listeContacts = document.getElementById('listeContacts');
-            if (listeContacts) {
-                listeContacts.innerHTML = afficherContacts(contacts);
-            }
+            discussionPanel.outerHTML = createGroupView({ contacts }); // Passer un objet avec contacts
+            attachGroupContactEvents();
         }
     }
 });
@@ -169,14 +198,32 @@ document.addEventListener('click', async (e) => {
     // ...existing code...
 
     if (e.target.id === 'backToGroupView') {
-        const contacts = await chargerContacts();
+        const { contacts } = await chargerContacts(); // Destructurer pour obtenir juste contacts
         const discussionPanel = document.querySelector('.discussion-panel');
         if (discussionPanel) {
-            discussionPanel.outerHTML = createGroupView(contacts);
+            discussionPanel.outerHTML = createGroupView({ contacts }); // Passer un objet avec contacts
             attachGroupContactEvents(); // Les sélections seront restaurées
         }
     }
 
 });
+
+// Ajoutez cette fonction pour gérer les événements de clic
+function attachContactClickEvents() {
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.addEventListener('click', async (event) => {
+            if (item.dataset.contact) {
+                const data = item.dataset.contact.replace(/&apos;/g, "'");
+                const contact = JSON.parse(data);
+                await handleContactClick(contact, event);
+            } else if (item.dataset.group) {
+                const data = item.dataset.group.replace(/&apos;/g, "'");
+                const group = JSON.parse(data);
+                // Gérer le clic sur un groupe (à implémenter)
+                // await handleGroupClick(group, event);
+            }
+        });
+    });
+}
 
 

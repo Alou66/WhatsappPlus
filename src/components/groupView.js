@@ -1,7 +1,7 @@
 // import { afficherContacts, chargerContacts } from "./contactLogique";
 // import { createDiscussion } from "./discussion";
 
-export function createGroupView(contacts) {
+export function createGroupView({contacts}) {  // Destructurer l'objet pour obtenir contacts
     return `
         <div class="discussion-panel w-[30%] flex flex-col border-r border-[#959797]">
             <div class="h-[60px] flex items-center gap-4 p-5 border-b">

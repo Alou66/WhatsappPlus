@@ -68,6 +68,20 @@
           "nom": "Diallo",
           "numero": "123",
           "dateAjout": "2025-06-13T08:59:10.669Z"
+        },
+        {
+          "id": "8b98b7ee-e80f-46ca-a8b4-d5ae3e73e80f",
+          "prenom": "Ass",
+          "nom": "Ndiaye",
+          "numero": "222",
+          "dateAjout": "2025-06-17T13:31:22.049Z"
+        },
+        {
+          "id": "5683d284-9fac-4f8f-9cad-48aebf3caa5f",
+          "prenom": "Alou ",
+          "nom": "Ndiaye",
+          "numero": "11111",
+          "dateAjout": "2025-06-17T13:32:32.766Z"
         }
       ],
       "messages": {
@@ -135,7 +149,42 @@
             "receiverId": "0123456789"
           }
         ]
-      }
+      },
+      "groups": [
+        {
+          "id": "e9086066-7728-44de-a1e9-709e93764a9f",
+          "name": "Amis",
+          "description": "",
+          "createdAt": "2025-06-17T13:11:13.358Z",
+          "admin": "1",
+          "members": [
+            "1"
+          ]
+        },
+        {
+          "id": "292f82f6-44c8-4b14-9a36-c68ad32a7b11",
+          "name": "Amis d'enfance",
+          "description": "Hello",
+          "createdAt": "2025-06-17T13:17:09.892Z",
+          "admin": "1",
+          "members": [
+            "1",
+            "123"
+          ]
+        },
+        {
+          "id": "c324a5e4-7829-41c2-8d85-5f1a58a14caf",
+          "name": "njdjldezklnde",
+          "description": "zk,kze,kkzea,ll",
+          "createdAt": "2025-06-17T13:30:39.892Z",
+          "admin": "1",
+          "members": [
+            "1",
+            "778021529",
+            "776549087"
+          ]
+        }
+      ]
     },
     {
       "id": "2",

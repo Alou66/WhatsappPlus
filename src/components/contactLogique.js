@@ -99,26 +99,54 @@ export async function chargerContacts() {
     try {
         const response = await fetch(`${API}/${utilisateurActuel.id}`);
         const user = await response.json();
-        return user.contacts || [];
+        return {
+            contacts: user.contacts || [],
+            groups: user.groups || []
+        };
     } catch (error) {
         console.error('Erreur lors du chargement des contacts:', error);
-        return [];
+        return { contacts: [], groups: [] };
     }
 }
 
-export function afficherContacts(contacts) {
-    return contacts.map(contact => `
-        <div class="contact-item flex items-center gap-3 px-4 py-3 hover:bg-[#f0f2f5] cursor-pointer"
-             data-contact='${JSON.stringify(contact).replace(/'/g, "&apos;")}'>
-            <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-                ${contact.prenom[0]}${contact.nom[0]}
+export function afficherContacts({ contacts, groups }) {
+    let html = '';
+    
+    // Afficher les groupes
+    if (groups && groups.length > 0) {
+        html += groups.map(group => `
+            <div class="contact-item flex items-center gap-3 px-4 py-3 hover:bg-[#f0f2f5] cursor-pointer"
+                 data-group='${JSON.stringify(group).replace(/'/g, "&apos;")}'>
+                <div class="w-12 h-12 rounded-full bg-[#00a884] flex items-center justify-center text-white">
+                    ${group.name[0]}
+                </div>
+                <div class="flex-1 border-b border-[#e9edef] pb-2">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-medium text-[#111b21]">${group.name}</h3>
+                    </div>
+                    <p class="text-sm text-[#667781]">${group.description || 'Pas de description'}</p>
+                </div>
             </div>
-            <div class="flex-1 border-b border-[#e9edef] pb-2">
-                <div class="flex justify-between items-center">
-                    <h3 class="font-medium text-[#111b21]">${contact.prenom} ${contact.nom}</h3>
-               </div>
-                <p class="text-sm text-[#667781]">${contact.numero}</p>
+        `).join('');
+    }
+    
+    // Afficher les contacts
+    if (contacts && contacts.length > 0) {
+        html += contacts.map(contact => `
+            <div class="contact-item flex items-center gap-3 px-4 py-3 hover:bg-[#f0f2f5] cursor-pointer"
+                 data-contact='${JSON.stringify(contact).replace(/'/g, "&apos;")}'>
+                <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
+                    ${contact.prenom[0]}${contact.nom[0]}
+                </div>
+                <div class="flex-1 border-b border-[#e9edef] pb-2">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-medium text-[#111b21]">${contact.prenom} ${contact.nom}</h3>
+                    </div>
+                    <p class="text-sm text-[#667781]">${contact.numero}</p>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `).join('');
+    }
+    
+    return html;
 }
